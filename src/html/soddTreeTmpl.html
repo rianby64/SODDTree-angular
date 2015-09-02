@@ -1,0 +1,20 @@
+<script type="text/ng-template" id="/soddTreeInternalTmpl.html">
+  <i ng-if="leaf.leafs"
+     ng-click="onClickPlus(leaf)"
+     class="fa fa-plus"></i> <a ng-click="onClickNode(leaf)"
+                                href="#">{{leaf.text}}</a>
+  <ul ng-if="leaf.leafs">
+    <li ng-repeat="leaf in leaf.leafs">
+      <ng-include src="'/soddTreeInternalTmpl.html'"></ng-include>
+    </li>
+  </ul>
+</script>
+
+<div class="tree">
+  <ul ng-if="leaf"
+      ng-repeat="leaf in tree">
+    <li>
+      <ng-include src="'/soddTreeInternalTmpl.html'"></ng-include>
+    </li>
+  </ul>
+</div>

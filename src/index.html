@@ -1,0 +1,43 @@
+<html ng-app="soddTree">
+  <head>
+    <!-- STYLES -->
+    <!-- build:css lib/css/style.min.css -->
+    <link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link type="text/css" href="css/soddTree.css">
+    <!-- endbuild -->
+    <!-- SCRIPTS -->
+    <!-- build:js lib/js/vendor.min.js -->
+    <script src="bower_components/angular/angular.min.js"></script>
+    <!-- endbuild -->
+    <!-- Custom Scripts -->
+    <script type="text/javascript" src="js/soddtree.js"></script>
+  </head>
+  <body ng-controller="mainController">
+    <soddtree tree=myTree></soddtree>
+  </body>
+  
+  <script>
+    ;(function() {
+      "use strict";
+      angular.module('soddTree').controller('mainController', ['$scope', function($scope) {
+        
+        $scope.myTree = [{
+          text: 'un texto ahi',
+          leafs: [
+            {
+              text: 'otro texto'
+            },
+            {
+              text: 'mas'
+            },
+            {
+              text: 'y finalizar'
+            }
+          ]
+        }]
+        
+      }]);
+    })()
+  </script>
+
+</html>
