@@ -4,10 +4,11 @@
   "description": "Simple Ordered with Drag And Drop feature Tree",
   "main": "index.js",
   "scripts": {
+    "pretest": "npm install",
+    "test": "karma start",
     "prestart": "npm install",
     "postinstall": "bower install",
-    "start": "gulp default",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "gulp default"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,9 @@
     "url": "https://github.com/rianby64/soddtree-angular/issues"
   },
   "devDependencies": {
+    "gulp": "~3.9.0",
+    "karma": "~0.13.9",
+    "gherkin": "~3.1.1",
     "bower": "~1.5.2",
     "gulp-connect": "~2.2.0",
     "gulp-watch": "~4.3.5",
@@ -31,7 +35,9 @@
     "gulp-usemin": "~0.3.14",
     "gulp-minify-css": "~1.2.1",
     "gulp-uglify": "~1.4.0",
-    "gulp": "~3.9.0",
-    "gulp-rename": "~1.2.2"
+    "gulp-rename": "~1.2.2",
+    "karma-jasmine": "~0.3.6",
+    "karma-phantomjs-launcher": "~0.2.1",
+    "karma-jasmine-feature": "~1.0.5"
   }
 }
