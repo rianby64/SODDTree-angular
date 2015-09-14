@@ -16,21 +16,49 @@ var SODDTree = SODDTree || (function() {
   
   function SODDTree(d, c) {
     var tree = this, leafs = [], id = generateID(),
+        parent,
+        node = {},
         data = d || {},
         config = c || {};
 
-    this._id = function _id() {
+    function _id() {
       return id;
     };
     
-    this._addLeaf = function _addLeaf(leaf) {
-      leafs.push(leaf);
+    function _leafs() {
+      return leafs;
     };
     
-    this._removeLeaf = function _removeLeaf(leaf, property) {
+    function _config() {
+      return config;
+    };
+    
+    function _node() {
+      return node;
+    };
+    
+    function _parent(leaf) {
+      if (leaf) {
+        if (leaf instanceof SODDTree) {
+          parent = leaf;
+        }
+        else {
+          throw new Error('_parent(param) accepts only SODDTree elements as parametr');
+        }
+      }
+      return parent;
+    };
+    
+    function _addLeaf(leaf) {
+      leaf._parent(this);
+      leafs.push(leaf);
+      return this;
+    };
+    
+    function _removeLeaf(leaf, property) {
       var i, left, right;
       if (property !== undefined) {
-        right = leaf[property];
+        right = leaf.node()[property];
       }
       else {
         right = leaf.id();
@@ -38,7 +66,7 @@ var SODDTree = SODDTree || (function() {
       
       for (i = 0; i < leafs.length; i++) {
         if (property !== undefined) {
-          left = leafs[i][property];
+          left = leafs[i].node()[property];
         }
         else {
           left = leafs[i].id();
@@ -49,39 +77,62 @@ var SODDTree = SODDTree || (function() {
           }
         }
       }
+      return this;
     };
     
-    this._findLeaf = function _findLeaf(value, property) {
-      property = property || config[PROP_LABEL];
+    function _findLeaf(value, property) {
+      property = property || _config()[PROP_LABEL];
       var i;
       for (i = 0; i < leafs.length; i++) {
-        if (leafs[i][property] === value) {
+        if (leafs[i].node()[property] === value) {
           return leafs[i];
+        }
+      }
+      for (i = 0; i < leafs.length; i++) {
+        var found = leafs[i].findLeaf(value, property);
+        if (found !== -1) {
+          return found;
         }
       }
       return -1;
     };
     
-    this._getLeafs = function _getLeafs() {
-      return leafs;
+    function _swap(from, to) {
+      var parent_from = from._parent(),
+          parent_to = to._parent();
+      
+      parent_from.removeLeaf(from);
+      parent_to.removeLeaf(to);
+      
+      parent_to.addLeaf(from);
+      parent_from.addLeaf(to);
     };
     
-    this._getConfig = function _getConfig() {
-      return config;
+    function _dropIntoLeaf(drop) {
+      var drag = this,
+          parent_drag = drag._parent();
+      
+      parent_drag.removeLeaf(drag);
+      drop.addLeaf(drag);
     };
-
-    this._sort = function _sort(property, compare) {
-      property = property || config[PROP_LABEL];
+    
+    function _sort(property, compare) {
+      property = property || _config()[PROP_LABEL];
       compare = compare || function (x, y) {
-        if (x[property] < y[property]) {
+        if (x.node()[property] < y.node()[property]) {
           return -1;
         }
-        if (x[property] > y[property]) {
+        if (x.node()[property] > y.node()[property]) {
           return 1;
         }
         return 0;
       };
-      return leafs.sort(compare);
+      leafs.forEach(function(item) {
+        if (item.leafs().length > 0) {
+          item.sort(property, compare);
+        }
+      });
+      leafs.sort(compare);
     };
     
     function Init() {
@@ -89,12 +140,12 @@ var SODDTree = SODDTree || (function() {
       
       for (i in DEFAULT_CONFIG) {
         if (!(i in config)) {
-          config[i] = DEFAULT_CONFIG[i];
+          _config()[i] = DEFAULT_CONFIG[i];
         }
       }
       
       for (i in data) {
-        if (i === config[PROP_LEAFS]) {
+        if (i === _config()[PROP_LEAFS]) {
           if (data[i] instanceof Array) {
             var data_leafs = data[i];
             data_leafs.forEach(function(item) {
@@ -111,19 +162,45 @@ var SODDTree = SODDTree || (function() {
           }
           continue;
         }
-        tree[i] = data[i];
+        node[i] = data[i];
       }
     }
     
+    this._id = _id;
+    this._config = _config;
+    this._node = _node;
+    this._leafs = _leafs;
+    this._parent = _parent;
+    
+    this._swap = _swap;
+    this._sort = _sort;
+    
+    this._dropIntoLeaf = _dropIntoLeaf;
+    this._findLeaf = _findLeaf;
+    this._removeLeaf = _removeLeaf;
+    this._addLeaf = _addLeaf;
+    
     Init();
   };
-
+  
   SODDTree.prototype.id = function id() {
     return this._id();
   };
   
+  SODDTree.prototype.node = function node() {
+    return this._node();
+  };
+  
   SODDTree.prototype.sort = function sort(property) {
     return this._sort(property);
+  };
+  
+  SODDTree.prototype.swap = function sort(from, to) {
+    return this._swap(from, to);
+  };
+  
+  SODDTree.prototype.dropIntoLeaf = function dropIntoLeaf(drop) {
+    return this._dropIntoLeaf(drop);
   };
   
   SODDTree.prototype.findLeaf = function findLeaf(byValue, byProperty) {
@@ -131,7 +208,7 @@ var SODDTree = SODDTree || (function() {
   };
   
   SODDTree.prototype.addLeaf = function addLeaf(leaf, config) {
-    var configObject = config || this._getConfig(),
+    var configObject = config || this._config(),
         leafObject;
     if (leaf instanceof SODDTree) {
       leafObject = leaf;
@@ -144,7 +221,7 @@ var SODDTree = SODDTree || (function() {
   };
   
   SODDTree.prototype.removeLeaf = function removeLeaf(leaf, property) {
-    var configObject = this._getConfig(), property = property || this._getConfig()[PROP_LABEL],
+    var configObject = this._config(), property = property || this._config()[PROP_LABEL],
         leafObject;
     if (leaf instanceof SODDTree) {
       leafObject = leaf;
@@ -163,19 +240,31 @@ var SODDTree = SODDTree || (function() {
     return this;
   };
   
-  SODDTree.prototype.getLeafs = function getLeafs() {
-    return this._getLeafs();
+  SODDTree.prototype.leafs = function leafs() {
+    return this._leafs();
   };
   
   SODDTree.prototype.getLabel = function getLabel() {
-    var prop_label = this._getConfig()[PROP_LABEL];
-    return this[prop_label];
+    var prop_label = this._config()[PROP_LABEL];
+    return this._node()[prop_label];
   };
 
   SODDTree.prototype.setLabel = function setLabel(label) {
-    var prop_label = this._getConfig()[PROP_LABEL];
-    this[prop_label] = label;
+    var prop_label = this._config()[PROP_LABEL];
+    this._node()[prop_label] = label;
     return this;
   };
+  
+  SODDTree.prototype.toObject = function toString() {
+    var leafs = this._leafs(),
+        node = this._node(),
+        prop_leaf = this._config()[PROP_LEAFS];
+    node[prop_leaf] = [];
+    leafs.forEach(function(item) {
+      node[prop_leaf].push(item.toObject());
+    }, this);
+    return node;
+  };
+  
   return SODDTree;
 })();
