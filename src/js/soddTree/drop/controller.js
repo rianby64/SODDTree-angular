@@ -7,9 +7,18 @@
   function soddtreeDropController($scope) {
     $scope.drop = $scope.drop || function errorDropFn() { console.error('soddtreeDropController>> drop fn undefined'); };
     
-    $scope.dragover = $scope.dragover || function errorDragOverFn() { };
-    $scope.dragleave = $scope.dragleave || function errorDragLeaveFn() { };
-    $scope.dragenter = $scope.dragenter || function errorDragEnterFn() { };
+    $scope.dragover = $scope.dragover || function errorDragOverFn() {
+      event.stopPropagation();
+      event.preventDefault();
+    };
+    $scope.dragleave = $scope.dragleave || function errorDragLeaveFn() {
+      event.stopPropagation();
+      event.preventDefault();
+    };
+    $scope.dragenter = $scope.dragenter || function errorDragEnterFn() {
+      event.stopPropagation();
+      event.preventDefault();
+    };
     
     $scope.onDrop = function onDrop(event, scope, element, attrs) {
       $scope.drop(event, scope, element, attrs);

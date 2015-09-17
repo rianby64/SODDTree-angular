@@ -8,30 +8,18 @@
   function soddtreeDropLink(scope, element, attrs) {
     
     function drop(event) {
-      event.stopPropagation();
-      event.preventDefault();
-      
       scope.onDrop(event, scope, element, attrs);
     }
     
     function dragover(event) {
-      event.stopPropagation();
-      event.preventDefault();
-      
       scope.onDragover(event, scope, element, attrs);
     }
     
     function dragleave(event) {
-      event.stopPropagation();
-      event.preventDefault();
-      
       scope.onDragleave(event, scope, element, attrs);
     }
     
     function dragenter(event) {
-      event.stopPropagation();
-      event.preventDefault();
-      
       scope.onDragenter(event, scope, element, attrs);
     }
     

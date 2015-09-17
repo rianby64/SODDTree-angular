@@ -7,11 +7,9 @@
   function soddtreeDragLink(scope, element, attrs) {
     
     function dragstart(event) {
-      event.stopPropagation();
       scope.onDragstart(event, scope, element, attrs);
     }
     function dragend(event) {
-      event.stopPropagation();
       scope.onDragend(event, scope, element, attrs);
     }
     
