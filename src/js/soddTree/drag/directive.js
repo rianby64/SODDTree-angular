@@ -7,13 +7,17 @@
   function soddtreeDragLink(scope, element, attrs) {
     
     function dragstart(event) {
-      event.dataTransfer.setData('SODDLeaf', scope.leaf.id());
-      event.dataTransfer.effectAllowed = "all";
       event.stopPropagation();
+      scope.onDragstart(event, scope, element, attrs);
+    }
+    function dragend(event) {
+      event.stopPropagation();
+      scope.onDragend(event, scope, element, attrs);
     }
     
     [].forEach.call(element, function(item) {
       item.addEventListener('dragstart', dragstart);
+      item.addEventListener('dragend', dragend);
     });
   }
   
@@ -21,7 +25,9 @@
     return {
       restrict: 'A',
       scope: {
-        leaf: '='
+        leaf: '=',
+        dragstart: '=',
+        dragend: '='
       },
       link: soddtreeDragLink,
       controller: 'soddtreeDragController'

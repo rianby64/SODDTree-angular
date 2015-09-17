@@ -8,30 +8,31 @@
   function soddtreeDropLink(scope, element, attrs) {
     
     function drop(event) {
-      console.log(scope);
-      console.log('from', event.dataTransfer.getData('SODDLeaf'));
-      console.log('to', scope.leaf.id());
-      
-      event.target.style.opacity = 1;
-      event.preventDefault();
       event.stopPropagation();
+      event.preventDefault();
+      
+      scope.onDrop(event, scope, element, attrs);
     }
     
     function dragover(event) {
       event.stopPropagation();
       event.preventDefault();
+      
+      scope.onDragover(event, scope, element, attrs);
     }
     
     function dragleave(event) {
-      event.target.style.opacity = 1.0; // uslovnoe viipolnenie
       event.stopPropagation();
       event.preventDefault();
+      
+      scope.onDragleave(event, scope, element, attrs);
     }
     
     function dragenter(event) {
-      event.target.style.opacity = 0.5; // uslovnoe viipolnenie
       event.stopPropagation();
       event.preventDefault();
+      
+      scope.onDragenter(event, scope, element, attrs);
     }
     
     [].forEach.call(element, function(item) {
@@ -46,7 +47,11 @@
     return {
       restrict: 'A',
       scope: {
-        leaf: '='
+        leaf: '=',
+        dragover: '=',
+        dragleave: '=',
+        dragenter: '=',
+        drop: '='
       },
       link: soddtreeDropLink,
       controller: 'soddtreeDropController'
