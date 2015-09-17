@@ -6,6 +6,7 @@
   "scripts": {
     "pretest": "npm install",
     "test": "karma start",
+    "e2e": "protractor",
     "prestart": "npm install",
     "postinstall": "bower install",
     "start": "gulp default"
@@ -32,12 +33,14 @@
     "gulp-connect": "~2.2.0",
     "gulp-watch": "~4.3.5",
     "gulp-concat": "~2.6.0",
-    "gulp-usemin": "~0.3.14",
+    "gulp-usemin": "~0.2.3",
     "gulp-minify-css": "~1.2.1",
     "gulp-uglify": "~1.4.0",
     "gulp-rename": "~1.2.2",
     "karma-jasmine": "~0.3.6",
+    "karma-chrome-launcher": "~0.2.0",
     "karma-phantomjs-launcher": "~0.2.1",
-    "karma-jasmine-feature": "~1.0.5"
+    "karma-jasmine-feature": "~1.0.5",
+    "protractor": "~2.2.0"
   }
 }
