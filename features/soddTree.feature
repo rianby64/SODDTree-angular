@@ -141,3 +141,13 @@ Scenario: From two diferent independtly branches one draged leaf can be droped i
   And search a leaf by label with value "l_1_1"
   And putting found as drop
   Then drag one leaf and drop it into another and check their parents
+
+
+@ignore
+Scenario: Check all possibilities for findLeaf
+
+@ignore
+Scenario: Add promisses for every action
+
+@ignore
+Scenario: Put all manipulations for leaf, e.g. findLeaf, addLeaf, removeLeaf and so on into a single class
