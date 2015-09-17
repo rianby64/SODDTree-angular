@@ -8,19 +8,19 @@
   function soddtreeDropLink(scope, element, attrs) {
     
     function drop(event) {
-      scope.onDrop(event, scope, element, attrs);
+      return scope.onDrop(event, scope, element, attrs);
     }
     
     function dragover(event) {
-      scope.onDragover(event, scope, element, attrs);
+      return scope.onDragover(event, scope, element, attrs);
     }
     
     function dragleave(event) {
-      scope.onDragleave(event, scope, element, attrs);
+      return scope.onDragleave(event, scope, element, attrs);
     }
     
     function dragenter(event) {
-      scope.onDragenter(event, scope, element, attrs);
+      return scope.onDragenter(event, scope, element, attrs);
     }
     
     [].forEach.call(element, function(item) {

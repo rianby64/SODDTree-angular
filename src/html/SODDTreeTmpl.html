@@ -1,7 +1,7 @@
 <script type="text/ng-template" id="/soddTreeInternalTmpl.html">
-  <ul>
+  <ul ng-init="parent = leaf">
     <li ng-repeat="leaf in leaf.leafs()">
-      <soddtree-leaf leaf=leaf></soddtree-leaf>
+      <soddtree-leaf leaf=leaf root=tree parent=parent></soddtree-leaf>
       <ng-include ng-if="leaf.leafs().length > 0" src="'/soddTreeInternalTmpl.html'"></ng-include>
     </li>
   </ul>
@@ -15,7 +15,7 @@
       </div>
       <ul ng-if="tree.leafs().length > 0">
         <li ng-repeat="leaf in tree.leafs()">
-          <soddtree-leaf leaf=leaf></soddtree-leaf>
+          <soddtree-leaf leaf=leaf root=tree parent=tree></soddtree-leaf>
           <ng-include ng-if="leaf.leafs().length > 0" src="'/soddTreeInternalTmpl.html'"></ng-include>
         </li>
       </ul>

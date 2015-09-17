@@ -8,6 +8,9 @@
   function soddtreeLeafController($scope) {
     var leaf = $scope.leaf;
     $scope.label = leaf.getLabel() || "";
+    $scope.leaf.update = function() {
+      $scope.$parent.$digest();
+    };
     
     $scope.setLabel = function setLabel(label) {
       leaf.setLabel(label);
@@ -38,15 +41,21 @@
       event.target.style.opacity = 0.5;
     };
     $scope.dragend = function(event, scope) {
-      console.log('dragend', scope.leaf.getLabel());
       event.target.style.opacity = 1.0;
     };
     $scope.drop = function(event, scope) {
-      console.log('drop', scope.leaf.getLabel());
+      var root = $scope.root,
+          dragId = event.dataTransfer.getData('SODDLeaf'),
+          drag = root.findLeaf(dragId, 'id'),
+          drop = scope.leaf;
       
-      console.log('from', event.dataTransfer.getData('SODDLeaf'));
-      console.log('to', scope.leaf.id());
+      console.log('from', drag.getLabel());
+      console.log('to', drop.getLabel());
       
+      drag.dropIntoLeaf(drop);
+      
+      drop.update();
+      drag.update();
       event.target.style.opacity = 1.0;
     };
   }

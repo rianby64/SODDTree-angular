@@ -84,6 +84,16 @@ var SODDTree = SODDTree || (function() {
       property = property || _config()[PROP_LABEL];
       var i;
       for (i = 0; i < leafs.length; i++) {
+        if (value instanceof SODDTree) {
+          if (leafs[i].id() === value.id()) {
+            return leafs[i];
+          }
+        }
+        if (property === 'id') {
+          if (leafs[i].id() === value) {
+            return leafs[i];
+          }
+        }
         if (leafs[i].node()[property] === value) {
           return leafs[i];
         }

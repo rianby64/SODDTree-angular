@@ -8,7 +8,9 @@
     return {
       restrict: 'E',
       scope: {
-        leaf: '='
+        leaf: '=',
+        parent: '=',
+        root: '='
       },
       controller: 'soddtreeLeafController',
       templateUrl: 'html/SODDTreeLeafTmpl.html'
