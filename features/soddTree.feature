@@ -142,12 +142,25 @@ Scenario: From two diferent independtly branches one draged leaf can be droped i
   And putting found as drop
   Then drag one leaf and drop it into another and check their parents
 
-
-@ignore
 Scenario: Check all possibilities for findLeaf
+  Given a data = {"label":"l_1","child":[{"label":"l_1_1","child":[{"label":"l_1_2","prop1":"myProperty2","child":[]}]},{"label":"l_1_1_1","child":[{"label":"l_1_1_1_1","prop1":"property1","child":[{"label":"l_1_1_1_1_3","child":[]},{"label":"l_1_1_1_1_1","child":[]},{"label":"l_1_1_1_1_2","child":[]}]}]}]} for tree
+  And a config = {"leafs":"child"} for tree
+  When calling the constructor
+  And search a leaf by label with value "l_1_1_1_1"
+  Then found's property prop1 is property1
+  When search another leaf by prop1 with value "myProperty2"
+  Then another found's label is l_1_2
+  When search a leaf by leaf with value another found
+  Then found's property label is l_1_2
+  And found is equal to another found
+  When search another leaf by prop1 with value "property1"
+  Then another found's property label is l_1_1_1_1
+  When search a leaf by id with value another found
+  Then found's property label is l_1_1_1_1
+  And found is equal to another found
 
 @ignore
-Scenario: Add promisses for every action
+Scenario: Rewrite with promisses all actions
 
 @ignore
 Scenario: Put all manipulations for leaf, e.g. findLeaf, addLeaf, removeLeaf and so on into a single class

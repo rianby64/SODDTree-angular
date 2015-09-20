@@ -19,14 +19,34 @@
       this.tree.removeLeaf(obj, property);
     })
     .when(/search a leaf by (.*) with value (.*)/, function(param, value) {
-      var value = JSON.parse(value);
-      this.found = this.tree.findLeaf(value, param);
+      if (value === "another found") {
+        value = this.anotherfound;
+      }
+      else {
+        value = JSON.parse(value);
+      }
+      if (param === 'id') {
+        this.found = this.tree.findLeaf(value.id(), 'id');
+      }
+      else if (param === 'leaf') {
+        this.found = this.tree.findLeaf(value);
+      }
+      else {
+        this.found = this.tree.findLeaf(value, param);
+      }
       expect(this.found instanceof SODDTree).toBe(true);
+    })
+    .when(/search another leaf by (.*) with value (.*)/, function(param, value) {
+      var value = JSON.parse(value);
+      this.anotherfound = this.tree.findLeaf(value, param);
+      expect(this.anotherfound instanceof SODDTree).toBe(true);
+      this.anotherfound_id = this.anotherfound.id();
     })
     .when(/inside the found search by (.*) with value (.*)/, function(param, value) {
       var value = JSON.parse(value);
       this.found = this.found.findLeaf(value, param);
       expect(this.found instanceof SODDTree).toBe(true);
+      this.found_id = this.found.id();
     })
     .when(/putting found as drag/, function() {
       this.drag = this.found;
@@ -82,13 +102,36 @@
         expect(leaf instanceof SODDTree).toBe(true);
       })
     })
-    .then(/tree's label is (.*)/, function(text) {
-      var expected = this.tree.getLabel();
-      expect(expected).toBe(text);
+    .then(/(.*)'s label is (.*)/, function(obj, text) {
+      if (obj === 'tree') {
+        var expected = this.tree.getLabel();
+        expect(expected).toBe(text);
+      }
+      if (obj === 'found') {
+        var expected = this.found.getLabel();
+        expect(expected).toBe(text);
+      }
+      if (obj === 'another found') {
+        var expected = this.anotherfound.getLabel();
+        expect(expected).toBe(text);
+      }
     })
-    .then(/tree's property (.*) is (.*)/, function(property, value) {
-      var expected = this.tree.node()[property];
-      expect(expected).toBe(value);
+    .then(/(.*)'s property (.*) is (.*)/, function(obj, property, value) {
+      if (obj === 'tree') {
+        var expected = this.tree.node()[property];
+        expect(expected).toBe(value);
+      }
+      if (obj === 'found') {
+        var expected = this.found.node()[property];
+        expect(expected).toBe(value);
+      }
+      if (obj === 'another found') {
+        var expected = this.anotherfound.node()[property];
+        expect(expected).toBe(value);
+      }
+    })
+    .then(/found is equal to another found/, function() {
+      expect(this.found).toBe(this.anotherfound);
     })
     .then(/every tree's label's leaf is in (.*)/, function(expected_labels_) {
       var leafs = this.tree.leafs();
