@@ -10,9 +10,7 @@
 <div class="tree">
   <ul>
     <li>
-      <div soddtree-drop leaf="tree">
-        <a href="#">{{ tree.getLabel() }}</a>
-      </div>
+      <soddtree-leaf leaf=tree root=tree parent=tree></soddtree-leaf>
       <ul ng-if="tree.leafs().length > 0">
         <li ng-repeat="leaf in tree.leafs()">
           <soddtree-leaf leaf=leaf root=tree parent=tree></soddtree-leaf>

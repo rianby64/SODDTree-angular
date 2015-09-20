@@ -8,7 +8,9 @@
   function soddtreeLeafController($scope) {
     var leaf = $scope.leaf;
     $scope.label = leaf.getLabel() || "";
-    $scope.leaf.update = function() {
+    $scope.leaf.node().$scope = $scope; // so, this sounds very strange... reconsider this line
+    
+    $scope.refresh = function refresh() {
       $scope.$parent.$digest();
     };
     
@@ -46,16 +48,14 @@
     $scope.drop = function(event, scope) {
       var root = $scope.root,
           dragId = event.dataTransfer.getData('SODDLeaf'),
-          drag = root.findLeaf(dragId, 'id'),
-          drop = scope.leaf;
-      
-      console.log('from', drag.getLabel());
-      console.log('to', drop.getLabel());
+          drag = root.findLeaf(dragId, 'id'), // what about if perfom search inside parent?
+          drop = scope.leaf,
+          parentDrag = drag.node().$scope.parent,
+          parentDrop = drop.node().$scope.parent;
       
       drag.dropIntoLeaf(drop);
-      
-      drop.update();
-      drag.update();
+      parentDrop.node().$scope.refresh();
+      parentDrag.node().$scope.refresh();
       event.target.style.opacity = 1.0;
     };
   }
